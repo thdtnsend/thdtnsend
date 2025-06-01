@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>영양제 추천 결과</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-5">
+  <h2 class="text-center">{{ age }}세 {{ gender }}님을 위한 영양제 추천</h2>
+
+  {% if results[0].추천 %}
+    <div class="alert alert-warning text-center mt-4">{{ results[0].추천 }}</div>
+  {% else %}
+    {% for result in results %}
+      <div class="card my-4">
+        <div class="card-header bg-primary text-white">
+          <h5>{{ result.추천조합 }} - 추천 제품 조합</h5>
+        </div>
+        <div class="card-body">
+          <ul>
+            {% for name in result.제품명목록 %}
+              <li>{{ name }}</li>
+            {% endfor %}
+          </ul>
+          <p><strong>💰 총 가격:</strong> {{ result.총가격 | round(0) }} 원</p>
+
+          <h6 class="mt-4">성분 섭취 비교 ({{ result.추천조합 }} 기준)</h6>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped text-center">
+              <thead>
+                <tr>
+                  <th>성분명</th>
+                  <th>섭취량</th>
+                  <th>권장섭취량</th>
+                  <th>권장 충족 여부</th>
+                  <th>상한섭취량</th>
+                  <th>상한 초과 여부</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in comparison_map[result.추천조합] %}
+                  <tr>
+                    <td>{{ row['성분명'] }}</td>
+                    <td>{{ row['섭취량'] }}</td>
+                    <td>{{ row['권장섭취량'] }}</td>
+                    <td>{{ row['권장 충족 여부'] }}</td>
+                    <td>{{ row['상한섭취량'] }}</td>
+                    <td>{{ row['상한 초과 여부'] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+</body>
+</html>
